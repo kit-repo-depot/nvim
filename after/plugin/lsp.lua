@@ -5,6 +5,7 @@ lsp.ensure_installed({
     'eslint',
 })
 
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 local cmp = require('cmp')
 local cmp_select = {behavior = cmp.SelectBehavior.Select}
 local cmp_mappings = lsp.defaults.cmp_mappings({
@@ -37,7 +38,12 @@ lsp.on_attach(function(client, bufnr)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 
-require'lspconfig'.clangd.setup{}
+require('lspconfig')['clangd'].setup{
+    cmd = { "clangd", "--log=verbose" },
+    capabilities = capabilities
+}
+
+vim.lsp.set_log_level("trace")
 
 require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
 
